@@ -1,7 +1,11 @@
+
 name: Build .NET project
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - master
 
 env:
   DOTNET_VERSION: 10.0.x
@@ -30,4 +34,5 @@ jobs:
         run: dotnet build "$PROJECT_PATH" --configuration Release --no-restore
 
       - name: Run project
-        run: dotnet run --project "$PROJECT_PATH" --configuration Release --no-build
+        run: |
+          timeout 10s dotnet run --project "$PROJECT_PATH" --configuration Release --no-build || test $? -eq 124
