@@ -1,0 +1,33 @@
+name: Build .NET project
+
+on:
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: 10.0.x
+  PROJECT_PATH: ./Lab7.csproj
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Confirm runner
+        run: echo "GitHub Actions runner is working"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore "$PROJECT_PATH"
+
+      - name: Build project
+        run: dotnet build "$PROJECT_PATH" --configuration Release --no-restore
+
+      - name: Run project
+        run: dotnet run --project "$PROJECT_PATH" --configuration Release --no-build
